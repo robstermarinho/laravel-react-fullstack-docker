@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
-Route::get('/health', fn() => response()->json(['ok' => true, 'time' => now()]));
+Route::get('/health', [ApiController::class, 'health']);

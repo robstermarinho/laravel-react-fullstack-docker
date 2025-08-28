@@ -41,7 +41,7 @@ class LogoutApiTest extends TestCase
 
         $response->assertStatus(401)
             ->assertJson([
-                'message' => 'Invalid token.'
+                'message' => 'Invalid token'
             ]);
     }
 
@@ -240,7 +240,7 @@ class LogoutApiTest extends TestCase
 
         $response2->assertStatus(401)
             ->assertJson([
-                'message' => 'Invalid token.'
+                'message' => 'Invalid token'
             ]);
     }
 

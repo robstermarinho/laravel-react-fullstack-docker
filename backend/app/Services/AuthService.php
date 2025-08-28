@@ -8,9 +8,17 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\Log;
+use App\Contracts\AuthServiceInterface;
 
-class AuthService
+class AuthService implements AuthServiceInterface
 {
+
+    public function __construct()
+    {
+        Log::info('AuthService constructor');
+    }
+
     /**
      * Register a new user
      *

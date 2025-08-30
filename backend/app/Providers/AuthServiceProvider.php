@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Contracts\AuthServiceInterface;
 use App\Services\AuthService;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,9 +14,7 @@ class AuthServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Register AuthService as singleton
-        $this->app->singleton(AuthService::class, function ($app) {
-            return new AuthService();
-        });
+        $this->app->singleton(AuthServiceInterface::class, AuthService::class);
     }
 
     /**

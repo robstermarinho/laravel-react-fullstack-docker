@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\AuthService;
+use App\Contracts\AuthServiceInterface;
+use App\Services\CacheService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -11,12 +12,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    protected AuthService $authService;
 
-    public function __construct(AuthService $authService)
-    {
-        $this->authService = $authService;
-    }
+
+    public function __construct(
+        protected AuthServiceInterface $authService,
+        protected CacheService $cacheService
+    ) {}
 
     public function register(Request $request): JsonResponse
     {
@@ -36,6 +37,7 @@ class AuthController extends Controller
 
     public function login(Request $request): JsonResponse
     {
+
         try {
             $result = $this->authService->login($request->all());
 
@@ -93,6 +95,69 @@ class AuthController extends Controller
         }
 
         return $token;
+    }
+
+    /**
+     * Test cache functionality with unique ID
+     */
+    public function testCache(Request $request): JsonResponse
+    {
+        try {
+            $result = $this->cacheService->testCache();
+
+            return response()->json([
+                'message' => 'Cache test executed',
+                'result' => $result,
+                'timestamp' => now()->toISOString(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Cache test failed',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Get cache statistics
+     */
+    public function getCacheStats(Request $request): JsonResponse
+    {
+        try {
+            $stats = $this->cacheService->getCacheStats();
+
+            return response()->json([
+                'message' => 'Cache statistics retrieved',
+                'stats' => $stats,
+                'timestamp' => now()->toISOString(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to get cache statistics',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Clear test cache
+     */
+    public function clearTestCache(Request $request): JsonResponse
+    {
+        try {
+            $result = $this->cacheService->clearTestCache();
+
+            return response()->json([
+                'message' => $result ? 'Cache cleared successfully' : 'Cache was already empty',
+                'success' => $result,
+                'timestamp' => now()->toISOString(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to clear cache',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

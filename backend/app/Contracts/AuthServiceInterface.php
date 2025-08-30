@@ -20,21 +20,7 @@ interface AuthServiceInterface
      */
     public function register(array $data): array;
 
-    /**
-     * Validate registration data
-     *
-     * @param array $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    public function validateRegister(array $data): \Illuminate\Contracts\Validation\Validator;
 
-    /**
-     * Validate login data
-     *
-     * @param array $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    public function validateLogin(array $data): \Illuminate\Contracts\Validation\Validator;
 
     /**
      * Authenticate user login
@@ -70,4 +56,21 @@ interface AuthServiceInterface
      * @return bool
      */
     public function isValidToken(string $token): bool;
+
+    /**
+     * Validate login data
+     *
+     * @param array $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function validateLogin(array $data): \Illuminate\Contracts\Validation\Validator;
+
+
+    /**
+     * Validate registration data
+     *
+     * @param array $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function validateRegister(array $data): \Illuminate\Contracts\Validation\Validator;
 }

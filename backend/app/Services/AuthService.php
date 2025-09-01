@@ -14,7 +14,7 @@ use App\Contracts\AuthServiceInterface;
 class AuthService implements AuthServiceInterface
 {
 
-    public function __construct()
+    public function __construct(private ServiceCnt $serviceCnt)
     {
         Log::info('AuthService constructor');
     }

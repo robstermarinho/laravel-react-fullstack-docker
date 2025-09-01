@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
+
 class ServiceCnt
 {
     protected $cnt;
@@ -9,6 +11,7 @@ class ServiceCnt
     public function __construct()
     {
         $this->cnt = 0;
+        Log::info('ServiceCnt constructor ');
     }
 
     public function increment()

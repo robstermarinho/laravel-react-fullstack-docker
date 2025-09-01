@@ -14,7 +14,9 @@ class AuthServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Register AuthService as singleton
-        $this->app->singleton(AuthServiceInterface::class, AuthService::class);
+        $this->app->singleton(AuthServiceInterface::class, function ($app) {
+            return new AuthService();
+        });
     }
 
     /**

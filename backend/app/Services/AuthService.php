@@ -200,6 +200,4 @@ class AuthService implements AuthServiceInterface
             'password' => 'required|string|min:8',
         ]);
     }
-
-    
 }

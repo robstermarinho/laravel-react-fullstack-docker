@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use App\Services\AuthService;
+use App\Contracts\AuthServiceInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +21,7 @@ class AuthServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->authService = new AuthService();
+        $this->authService = app(AuthServiceInterface::class);
     }
 
     public function test_register_creates_user_successfully(): void
@@ -264,5 +265,99 @@ class AuthServiceTest extends TestCase
         $result = $this->authService->isValidToken('');
 
         $this->assertFalse($result);
+    }
+
+    public function test_logout_works_with_bearer_prefix(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token');
+        $plainTextToken = $token->plainTextToken;
+
+        $result = $this->authService->logout("Bearer {$plainTextToken}");
+
+        $this->assertTrue($result);
+        $this->assertNull(PersonalAccessToken::findToken($plainTextToken));
+    }
+
+    public function test_logout_works_with_case_insensitive_bearer_prefix(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token');
+        $plainTextToken = $token->plainTextToken;
+
+        $result = $this->authService->logout("bearer {$plainTextToken}");
+
+        $this->assertTrue($result);
+        $this->assertNull(PersonalAccessToken::findToken($plainTextToken));
+    }
+
+    public function test_get_user_works_with_bearer_prefix(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token');
+        $plainTextToken = $token->plainTextToken;
+
+        $result = $this->authService->getUser("Bearer {$plainTextToken}");
+
+        $this->assertInstanceOf(User::class, $result);
+        $this->assertEquals($user->id, $result->id);
+    }
+
+    public function test_get_user_works_with_case_insensitive_bearer_prefix(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token');
+        $plainTextToken = $token->plainTextToken;
+
+        $result = $this->authService->getUser("BEARER {$plainTextToken}");
+
+        $this->assertInstanceOf(User::class, $result);
+        $this->assertEquals($user->id, $result->id);
+    }
+
+    public function test_is_valid_token_works_with_bearer_prefix(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token');
+        $plainTextToken = $token->plainTextToken;
+
+        $result = $this->authService->isValidToken("Bearer {$plainTextToken}");
+
+        $this->assertTrue($result);
+    }
+
+    public function test_is_valid_token_works_with_case_insensitive_bearer_prefix(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token');
+        $plainTextToken = $token->plainTextToken;
+
+        $result = $this->authService->isValidToken("bEaReR {$plainTextToken}");
+
+        $this->assertTrue($result);
+    }
+
+    public function test_logout_handles_bearer_prefix_with_extra_spaces(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token');
+        $plainTextToken = $token->plainTextToken;
+
+        $result = $this->authService->logout("Bearer    {$plainTextToken}");
+
+        $this->assertTrue($result);
+        $this->assertNull(PersonalAccessToken::findToken($plainTextToken));
+    }
+
+    public function test_get_user_handles_bearer_prefix_with_extra_spaces(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token');
+        $plainTextToken = $token->plainTextToken;
+
+        $result = $this->authService->getUser("Bearer   {$plainTextToken}");
+
+        $this->assertInstanceOf(User::class, $result);
+        $this->assertEquals($user->id, $result->id);
     }
 }

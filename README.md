@@ -240,3 +240,6 @@ This project is open-sourced software licensed under the [MIT license](https://o
 ## 📞 Support
 
 If you encounter any issues or have questions, please [open an issue](../../issues) on GitHub.
+
+
+npm install @reduxjs/toolkit react-redux @tanstack/react-query @tanstack/react-query-devtools

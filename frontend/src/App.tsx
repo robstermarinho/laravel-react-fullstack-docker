@@ -1,4 +1,9 @@
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { Provider } from 'react-redux';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { store } from './store/store';
+import { queryClient } from './lib/queryClient';
+import { useAuth } from './hooks/useAuth';
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import "./App.css";
@@ -19,11 +24,14 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <div className="App">
-        <AppContent />
-      </div>
-    </AuthProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <div className="App">
+          <AppContent />
+        </div>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </Provider>
   );
 }
 

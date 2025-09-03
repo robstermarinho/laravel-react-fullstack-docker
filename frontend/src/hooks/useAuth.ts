@@ -1,7 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setCredentials, clearCredentials, type User } from '../store/slices/authSlice';
-import api from '../services/api';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthStore, type User } from "../stores/authStore";
+import api from "../services/api";
 
 interface LoginCredentials {
   email: string;
@@ -21,42 +20,56 @@ interface AuthResponse {
 }
 
 export const useAuth = () => {
-  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
-  const { user, token, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { user, token, isAuthenticated, setCredentials, clearCredentials } =
+    useAuthStore();
 
   const loginMutation = useMutation({
-    mutationFn: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-      const response = await api.post('/api/login', credentials);
+    mutationKey: ["login"],
+    mutationFn: async (
+      credentials: LoginCredentials
+    ): Promise<AuthResponse> => {
+      const response = await api.post("/api/login", credentials);
       return response.data;
     },
     onSuccess: (data) => {
-      dispatch(setCredentials({ user: data.user, token: data.token }));
+      console.log("loginMutation onSuccess");
+      console.log(data);
+      setCredentials(data.user, data.token);
     },
   });
 
   const registerMutation = useMutation({
-    mutationFn: async (credentials: RegisterCredentials): Promise<AuthResponse> => {
-      const response = await api.post('/api/register', credentials);
+    mutationKey: ["register"],
+    mutationFn: async (
+      credentials: RegisterCredentials
+    ): Promise<AuthResponse> => {
+      const response = await api.post("/api/register", credentials);
       return response.data;
     },
     onSuccess: (data) => {
-      dispatch(setCredentials({ user: data.user, token: data.token }));
+      console.log("registerMutation onSuccess");
+      console.log(data);
+      setCredentials(data.user, data.token);
     },
   });
 
   const logoutMutation = useMutation({
+    mutationKey: ["logout"],
     mutationFn: async () => {
       if (token) {
-        await api.post('/api/logout');
+        await api.post("/api/logout");
       }
     },
     onSuccess: () => {
-      dispatch(clearCredentials());
+      clearCredentials();
+
+      // Clear tanstack query cache
       queryClient.clear();
     },
-    onError: () => {
-      dispatch(clearCredentials());
+    onError: (error) => {
+      console.log(error);
+      clearCredentials();
       queryClient.clear();
     },
   });
@@ -90,7 +103,10 @@ export const useAuth = () => {
     login,
     register,
     logout,
-    loading: loginMutation.isPending || registerMutation.isPending || logoutMutation.isPending,
+    loading:
+      loginMutation.isPending ||
+      registerMutation.isPending ||
+      logoutMutation.isPending,
     loginError: loginMutation.error,
     registerError: registerMutation.error,
     logoutError: logoutMutation.error,

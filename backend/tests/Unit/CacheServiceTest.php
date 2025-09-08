@@ -16,7 +16,7 @@ class CacheServiceTest extends TestCase
         parent::setUp();
         $this->cacheService = new CacheService();
 
-        // Limpar cache antes de cada teste
+        // Clear cache before each test
         Cache::flush();
     }
 
@@ -30,14 +30,14 @@ class CacheServiceTest extends TestCase
 
         // Assert
         $this->assertEquals('cache_miss', $result['status']);
-        $this->assertEquals('Novos dados criados e salvos no cache por 60 segundos', $result['message']);
+        $this->assertEquals('New data created and saved to cache for 60 seconds', $result['message']);
         $this->assertArrayHasKey('unique_id', $result['data']);
         $this->assertArrayHasKey('created_at', $result['data']);
         $this->assertArrayHasKey('created_timestamp', $result['data']);
         $this->assertArrayHasKey('expires_at', $result['data']);
         $this->assertEquals(60, $result['cache_remaining_seconds']);
 
-        // Verificar se os dados foram salvos no cache
+        // Check if data was saved to cache
         $cachedData = Cache::get($cacheKey);
         $this->assertNotNull($cachedData);
         $this->assertEquals($result['data']['unique_id'], $cachedData['unique_id']);
@@ -60,7 +60,7 @@ class CacheServiceTest extends TestCase
 
         // Assert
         $this->assertEquals('cache_hit', $result['status']);
-        $this->assertEquals('Dados encontrados no cache', $result['message']);
+        $this->assertEquals('Data found in cache', $result['message']);
         $this->assertEquals($existingData, $result['data']);
         $this->assertLessThanOrEqual(60, $result['cache_remaining_seconds']);
     }
@@ -96,7 +96,7 @@ class CacheServiceTest extends TestCase
         $testData = [
             'unique_id' => 'test_id_123',
             'created_at' => now()->toISOString(),
-            'created_timestamp' => time() - 30, // 30 segundos atrás
+            'created_timestamp' => time() - 30, // 30 seconds ago
             'expires_at' => now()->addSeconds(30)->toISOString(),
         ];
         Cache::put($cacheKey, $testData, 60);
@@ -119,7 +119,7 @@ class CacheServiceTest extends TestCase
 
         // Assert
         $this->assertFalse($stats['cache_exists']);
-        $this->assertEquals('Nenhum dado no cache', $stats['message']);
+        $this->assertEquals('No data in cache', $stats['message']);
     }
 
     public function test_get_cache_stats_handles_edge_case_when_cache_is_expired()
@@ -129,7 +129,7 @@ class CacheServiceTest extends TestCase
         $testData = [
             'unique_id' => 'test_id_123',
             'created_at' => now()->toISOString(),
-            'created_timestamp' => time() - 70, // 70 segundos atrás (expired)
+            'created_timestamp' => time() - 70, // 70 seconds ago (expired)
             'expires_at' => now()->subSeconds(10)->toISOString(),
         ];
         Cache::put($cacheKey, $testData, 60);

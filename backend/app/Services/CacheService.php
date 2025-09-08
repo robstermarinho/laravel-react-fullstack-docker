@@ -14,24 +14,25 @@ class CacheService
      */
     public function testCache(): array
     {
+
         $cacheKey = 'unique_id_cache';
 
-        // Tenta pegar do cache
+        // Try to get from cache
         $cachedData = Cache::get($cacheKey);
 
         if ($cachedData) {
-            // Se existe no cache, retorna os dados existentes
-            Log::info('Cache hit - retornando dados existentes', $cachedData);
+            // If exists in cache, return existing data
+            Log::info('Cache hit - returning existing data', $cachedData);
 
             return [
                 'status' => 'cache_hit',
-                'message' => 'Dados encontrados no cache',
+                'message' => 'Data found in cache',
                 'data' => $cachedData,
                 'cache_remaining_seconds' => $this->getCacheRemainingTime($cacheKey),
             ];
         }
 
-        // Se não existe no cache, cria novos dados
+        // If not in cache, create new data
         $newData = [
             'unique_id' => uniqid('cache_', true),
             'created_at' => now()->toISOString(),
@@ -39,14 +40,14 @@ class CacheService
             'expires_at' => now()->addSeconds(60)->toISOString(),
         ];
 
-        // Salva no cache por 60 segundos
+        // Save to cache for 60 seconds
         Cache::put($cacheKey, $newData, 60);
 
-        Log::info('Cache miss - criando novos dados', $newData);
+        Log::info('Cache miss - creating new data', $newData);
 
         return [
             'status' => 'cache_miss',
-            'message' => 'Novos dados criados e salvos no cache por 60 segundos',
+            'message' => 'New data created and saved to cache for 60 seconds',
             'data' => $newData,
             'cache_remaining_seconds' => 60,
         ];
@@ -60,7 +61,7 @@ class CacheService
      */
     private function getCacheRemainingTime(string $cacheKey): int
     {
-        // Fallback: calcular baseado no timestamp salvo
+        // Fallback: calculate based on saved timestamp
         $cachedData = Cache::get($cacheKey);
         if ($cachedData && isset($cachedData['created_timestamp'])) {
             $elapsed = time() - $cachedData['created_timestamp'];
@@ -80,7 +81,7 @@ class CacheService
     {
         $result = Cache::forget('unique_id_cache');
 
-        Log::info('Cache de teste limpo', ['success' => $result]);
+        Log::info('Test cache cleared', ['success' => $result]);
 
         return $result;
     }
@@ -98,7 +99,7 @@ class CacheService
         if (!$cachedData) {
             return [
                 'cache_exists' => false,
-                'message' => 'Nenhum dado no cache',
+                'message' => 'No data in cache',
             ];
         }
 

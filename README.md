@@ -20,17 +20,20 @@ A full-stack application with a Laravel API backend and React TypeScript fronten
 ### Initial Setup (First Time)
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd laravel-api-react
    ```
 
 2. **Start and build the containers**
+
    ```bash
    docker compose up -d --build
    ```
 
 3. **Prepare the backend**
+
    ```bash
    # Copy environment file
    docker compose exec api_app cp .env.example .env
@@ -46,13 +49,14 @@ A full-stack application with a Laravel API backend and React TypeScript fronten
    ```
 
 4. **Access the application**
-   - **Frontend**: http://localhost:5173
-   - **API**: http://localhost:8015
+   - **Frontend**: <http://localhost:5173>
+   - **API**: <http://localhost:8015>
    - **Database**: localhost:3306
 
 ### Daily Development
 
 For subsequent runs, simply use:
+
 ```bash
 docker compose up -d
 ```
@@ -170,17 +174,20 @@ laravel-api-react/
 1. **Port conflicts**: If ports 3306, 5173, or 8015 are in use, stop the conflicting services or modify the ports in `docker-compose.yml`
 
 2. **Permission issues**: On Linux/macOS, you might need to adjust file permissions:
+
    ```bash
    sudo chown -R $USER:$USER backend/ frontend/
    ```
 
 3. **Database connection issues**: Ensure the MySQL container is healthy:
+
    ```bash
    docker compose ps
    docker compose logs mysql
    ```
 
 4. **Container build issues**: Clean and rebuild containers:
+
    ```bash
    docker compose down
    docker compose up -d --build --force-recreate
@@ -189,6 +196,7 @@ laravel-api-react/
 ### Logs
 
 View logs for specific services:
+
 ```bash
 # API logs
 docker compose logs api_app
@@ -206,11 +214,25 @@ docker compose logs
 ## 🧪 Testing
 
 ### Backend Tests
+
 ```bash
-docker compose exec api_app php artisan test
+# Run all tests using SQLite in-memory database (recommended)
+docker compose exec api_app ./run-tests.sh
+
+# Run specific test
+docker compose exec api_app ./run-tests.sh --filter=AuthControllerTest
+
+# Run tests with verbose output
+docker compose exec api_app ./run-tests.sh --verbose
+
+# Alternative: Run tests with explicit environment variables
+docker compose exec -e APP_ENV=testing -e DB_CONNECTION=sqlite -e DB_DATABASE=:memory: api_app php artisan test
 ```
 
+**Note**: The `./run-tests.sh` script is recommended as it properly configures the testing environment with SQLite in-memory database for faster and isolated test execution.
+
 ### Frontend Tests
+
 ```bash
 docker compose exec web npm test
 ```
@@ -240,6 +262,5 @@ This project is open-sourced software licensed under the [MIT license](https://o
 ## 📞 Support
 
 If you encounter any issues or have questions, please [open an issue](../../issues) on GitHub.
-
 
 npm install @reduxjs/toolkit react-redux @tanstack/react-query @tanstack/react-query-devtools

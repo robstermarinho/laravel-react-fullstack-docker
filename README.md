@@ -231,10 +231,10 @@ docker compose exec -e APP_ENV=testing -e DB_CONNECTION=sqlite -e DB_DATABASE=:m
 
 **Note**: The `./run-tests.sh` script is recommended as it properly configures the testing environment with SQLite in-memory database for faster and isolated test execution.
 
-### Frontend Tests
+### Frontend Tests (Watch mode)
 
 ```bash
-docker compose exec web npm test
+docker compose exec -it web npm test
 ```
 
 ## 🚢 Production Deployment
@@ -250,17 +250,3 @@ For production deployment, consider:
 ## 📝 License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📞 Support
-
-If you encounter any issues or have questions, please [open an issue](../../issues) on GitHub.
-
-npm install @reduxjs/toolkit react-redux @tanstack/react-query @tanstack/react-query-devtools

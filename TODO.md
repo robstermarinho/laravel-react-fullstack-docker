@@ -24,11 +24,11 @@
   - Implement progressive loading states
 
 ### Testing - Store & Hooks
-- [ ] **Create tests for Zustand store**
-  - Unit tests for auth store actions (login, logout, setCredentials)
-  - Test store persistence and hydration
-  - Mock API calls and test error states
-  - Add integration tests for store with React components
+- [x] **Create tests for Zustand store**
+  - [x] Unit tests for auth store actions (login, logout, setCredentials)
+  - [ ] Test store persistence and hydration
+  - [ ] Mock API calls and test error states
+  - [ ] Add integration tests for store with React components
 
 - [ ] **Create tests for custom hooks** 
   - Test useApiCache hook with different scenarios

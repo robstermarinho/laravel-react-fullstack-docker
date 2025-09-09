@@ -123,6 +123,8 @@ class AuthController extends Controller
      */
     public function getCacheStats(Request $request): JsonResponse
     {
+   
+
         try {
             $stats = $this->cacheService->getCacheStats();
 

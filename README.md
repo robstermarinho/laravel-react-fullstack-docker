@@ -247,6 +247,112 @@ For production deployment, consider:
 4. **Build Optimization**: Use production builds for the frontend
 5. **Security**: Review and implement security best practices
 
+## 🔧 Makefile Commands (Optional)
+
+This project includes a comprehensive Makefile that provides shortcuts for common development tasks. Instead of typing long Docker Compose commands, you can use short, memorable make commands.
+
+### Quick Start with Makefile
+
+```bash
+# Complete project setup from scratch
+git clone <repository-url>
+cd laravel-api-react
+make setup                      # Equivalent to all manual setup steps above
+
+# Start development environment
+make up                         # Interactive mode
+make up-d                       # Detached mode
+```
+
+### Available Commands
+
+Run `make help` to see all available commands:
+
+```bash
+make help
+```
+
+### Environment Management
+
+```bash
+make up                         # Start all services (interactive)
+make up-d                       # Start all services (detached)
+make setup                      # Complete first-time setup
+make install                    # Install all dependencies
+make clean                      # Clean up containers and volumes
+```
+
+### Backend/Laravel Commands
+
+```bash
+# Composer package management
+make composer-add PACKAGE=vendor/package        # Add production dependency
+make composer-add-dev PACKAGE=vendor/package    # Add development dependency
+make composer-update                             # Update all dependencies
+make composer-remove PACKAGE=vendor/package     # Remove dependency
+make composer-show                               # Show installed packages
+
+# Laravel Artisan commands
+make artisan CMD='migrate'                       # Run any artisan command
+make migrate                                     # Run database migrations
+make seed                                        # Run database seeders
+make fresh                                       # Fresh migrate with seeding
+
+# Testing and code quality
+make test                                        # Run PHPUnit tests
+make lint                                        # Check code style (PHP CS Fixer)
+make format                                      # Fix code style (PHP CS Fixer)
+```
+
+### Frontend/React Commands
+
+```bash
+make frontend-install                            # Install npm dependencies
+make frontend-build                              # Build production assets
+make frontend-restart                            # Restart React dev server
+```
+
+### Shell Access
+
+```bash
+make backend-shell                               # Open bash in API container
+make api-shell                                   # Alias for backend-shell
+make frontend-shell                              # Open bash in frontend container
+make web-shell                                   # Alias for frontend-shell
+make mysql-shell                                 # Open MySQL CLI
+```
+
+### Service Management
+
+```bash
+make backend-restart                             # Restart API container
+make frontend-restart                            # Restart frontend container
+make nginx-restart                               # Restart nginx container
+```
+
+### Makefile Examples
+
+```bash
+# Add a new Laravel package
+make composer-add PACKAGE=spatie/laravel-permission
+
+# Run migrations and seed database
+make fresh
+
+# Run tests and format code
+make test
+make format
+
+# Open shell to debug
+make backend-shell
+
+# Clean everything and start fresh
+make clean
+make up-d
+```
+
+---
+
 ## 📝 License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

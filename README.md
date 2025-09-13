@@ -36,16 +36,16 @@ A full-stack application with a Laravel API backend and React TypeScript fronten
 
    ```bash
    # Copy environment file
-   docker compose exec api_app cp .env.example .env
+   docker compose exec api cp .env.example .env
    
    # Install PHP dependencies
-   docker compose exec api_app composer install
+   docker compose exec api composer install
    
    # Generate application key
-   docker compose exec api_app php artisan key:generate
+   docker compose exec api php artisan key:generate
    
    # Run database migrations
-   docker compose exec api_app php artisan migrate
+   docker compose exec api php artisan migrate
    ```
 
 4. **Access the application**
@@ -65,10 +65,10 @@ docker compose up -d
 
 | Service | Container Name | Port | Description |
 |---------|---------------|------|-------------|
-| `api_nginx` | `api_nginx` | 8015 | Nginx reverse proxy for Laravel API |
-| `api_app` | `api_app` | - | Laravel PHP-FPM application |
-| `mysql` | `api_mysql` | 3306 | MySQL database server |
-| `web` | `web_frontend` | 5173 | React development server with Vite |
+| `nginx` | `nginx` | 8015 | Nginx reverse proxy for Laravel API |
+| `api` | `api` | - | Laravel PHP-FPM application |
+| `mysql` | `mysql` | 3306 | MySQL database server |
+| `web` | `web` | 5173 | React development server with Vite |
 
 ## 🛠️ Development Commands
 
@@ -76,22 +76,22 @@ docker compose up -d
 
 ```bash
 # Access the API container
-docker compose exec api_app bash
+docker compose exec api bash
 
 # Run Artisan commands
-docker compose exec api_app php artisan <command>
+docker compose exec api php artisan <command>
 
 # Install/update PHP dependencies
-docker compose exec api_app composer install
-docker compose exec api_app composer update
+docker compose exec api composer install
+docker compose exec api composer update
 
 # Run tests
-docker compose exec api_app php artisan test
+docker compose exec api php artisan test
 
 # Clear caches
-docker compose exec api_app php artisan cache:clear
-docker compose exec api_app php artisan config:clear
-docker compose exec api_app php artisan route:clear
+docker compose exec api php artisan cache:clear
+docker compose exec api php artisan config:clear
+docker compose exec api php artisan route:clear
 ```
 
 ### Frontend (React)
@@ -199,7 +199,7 @@ View logs for specific services:
 
 ```bash
 # API logs
-docker compose logs api_app
+docker compose logs api
 
 # Frontend logs
 docker compose logs web
@@ -217,16 +217,16 @@ docker compose logs
 
 ```bash
 # Run all tests using SQLite in-memory database (recommended)
-docker compose exec api_app ./run-tests.sh
+docker compose exec api ./run-tests.sh
 
 # Run specific test
-docker compose exec api_app ./run-tests.sh --filter=AuthControllerTest
+docker compose exec api ./run-tests.sh --filter=AuthControllerTest
 
 # Run tests with verbose output
-docker compose exec api_app ./run-tests.sh --verbose
+docker compose exec api ./run-tests.sh --verbose
 
 # Alternative: Run tests with explicit environment variables
-docker compose exec -e APP_ENV=testing -e DB_CONNECTION=sqlite -e DB_DATABASE=:memory: api_app php artisan test
+docker compose exec -e APP_ENV=testing -e DB_CONNECTION=sqlite -e DB_DATABASE=:memory: api php artisan test
 ```
 
 **Note**: The `./run-tests.sh` script is recommended as it properly configures the testing environment with SQLite in-memory database for faster and isolated test execution.
